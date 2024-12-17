@@ -6,9 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}"
   },
   "dependencies": {
+    "@kinde-oss/kinde-auth-nextjs": "2.4.6",
     "@radix-ui/react-slot": "1.1.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
