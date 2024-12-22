@@ -35,8 +35,6 @@ async function SiteRoute() {
   }
   const data = await getData(user.id);
 
-  console.log();
-
   return (
     <section>
       <div className="mb-4 flex items-center justify-end">
