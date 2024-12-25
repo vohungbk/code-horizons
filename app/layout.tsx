@@ -1,8 +1,13 @@
+import { AuthProvider } from '@/providers/AuthProvider';
+import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { AuthProvider } from '@/providers/AuthProvider';
+import { extractRouterConfig } from 'uploadthing/server';
+import { ourFileRouter } from './api/uploadthing/core';
 import { ThemeProvider } from './components/dashboard/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
+
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +40,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
             {children}
+            <Toaster richColors closeButton />
           </ThemeProvider>
         </body>
       </html>

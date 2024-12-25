@@ -67,7 +67,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
             You don&apos;t have any Articles created
           </h2>
           <p className="mx-auto mb-8 mt-2 max-w-sm text-center text-sm leading-6 text-muted-foreground">
-            You currently don&apos;t have any sites created. Click the button above to
+            You currently don&apos;t have any article created. Click the button above to
             create your first site.
           </p>
           <Button asChild>
