@@ -1,10 +1,34 @@
 import prisma from '@/app/utils/db';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
+import { Book, FileIcon, MoreHorizontal, PlusCircle, Settings } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import React from 'react';
 
 async function getData(userId: string, siteId: string) {
   const data = await prisma.post.findMany({
@@ -77,7 +101,70 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
           </Button>
         </div>
       ) : (
-        <div></div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Articles</CardTitle>
+            <CardDescription>
+              Manage your Articles in a simple intuitive interface
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Image</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data?.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        width={64}
+                        height={64}
+                        className="size-16 rounded-md object-cover"
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">{item.title}</TableCell>
+                    <TableCell>
+                      <Badge className="bg-green-500/10 text-green-500">Published</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+                        item.createdAt,
+                      )}
+                    </TableCell>
+                    <TableCell className="text-end">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Button size="icon" asChild variant="ghost">
+                            <MoreHorizontal className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link href={`/dashboard/sites/${params.siteId}/${item.id}`}>
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
     </>
   );
