@@ -1,11 +1,10 @@
 'use server';
 
 import { parseWithZod } from '@conform-to/zod';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import prisma from './utils/db';
-import { postSchema, siteSchema } from './utils/schema';
 import { requireUser } from './utils/requireUser';
+import { postSchema, siteSchema } from './utils/schema';
 
 export async function CreateSiteAction(preState: any, formData: FormData) {
   const user = await requireUser();
@@ -52,5 +51,33 @@ export async function CreatePostAction(preState: any, formData: FormData) {
       siteId: formData.get('siteId') as string,
     },
   });
+  return redirect(`/dashboard/sites/${formData.get('siteId')}`);
+}
+
+export async function EditPostAction(preState: any, formData: FormData) {
+  const user = await requireUser();
+
+  const submission = parseWithZod(formData, {
+    schema: postSchema,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const data = await prisma.post.update({
+    where: {
+      userId: user.id,
+      id: formData.get('articleId') as string,
+    },
+    data: {
+      title: submission.value.title,
+      smallDescription: submission.value.smallDescription,
+      slug: submission.value.slug,
+      image: submission.value.coverImage,
+      articleContent: JSON.parse(submission.value.articleContent),
+    },
+  });
+
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);
 }
