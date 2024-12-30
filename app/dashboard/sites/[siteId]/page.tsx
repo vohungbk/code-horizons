@@ -1,3 +1,4 @@
+import SiteTableActions from '@/app/components/dashboard/SiteTableActions';
 import prisma from '@/app/utils/db';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,14 +10,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
   Table,
   TableBody,
   TableCell,
@@ -25,7 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Book, FileIcon, MoreHorizontal, PlusCircle, Settings } from 'lucide-react';
+import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -141,23 +134,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
                       )}
                     </TableCell>
                     <TableCell className="text-end">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button size="icon" asChild variant="ghost">
-                            <MoreHorizontal className="size-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem asChild>
-                            <Link href={`/dashboard/sites/${params.siteId}/${item.id}`}>
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <SiteTableActions siteId={params?.siteId} articleId={item.id} />
                     </TableCell>
                   </TableRow>
                 ))}

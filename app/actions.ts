@@ -81,3 +81,16 @@ export async function EditPostAction(preState: any, formData: FormData) {
 
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);
 }
+
+export async function DeletePostAction(preState: any, formData: FormData) {
+  const user = await requireUser();
+
+  const response = await prisma.post.delete({
+    where: {
+      userId: user.id,
+      id: formData.get('articleId') as string,
+    },
+  });
+
+  return response;
+}
