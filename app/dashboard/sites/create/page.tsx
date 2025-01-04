@@ -1,6 +1,7 @@
 'use client';
 
 import { CreateSiteAction } from '@/app/actions';
+import { SubmitButton } from '@/app/components/dashboard/SubmitButton';
 import { siteSchema } from '@/app/utils/schema';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,7 +35,7 @@ function NewSiteRoute() {
     <div className="flex flex-1 flex-col items-center justify-center">
       <Card className="max-w-[450px]">
         <CardHeader>
-          <CardTitle>Crete Site</CardTitle>
+          <CardTitle>Create Site</CardTitle>
           <CardDescription>
             Create your Site here. Click the button below once you done ...
           </CardDescription>
@@ -78,7 +79,7 @@ function NewSiteRoute() {
           </CardContent>
 
           <CardFooter>
-            <Button>Create Site</Button>
+            <SubmitButton text="Create Site" />
           </CardFooter>
         </form>
       </Card>
