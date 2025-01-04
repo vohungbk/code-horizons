@@ -50,7 +50,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Site   Site?   @relation(fields: [siteId], references: [id])
+  Site   Site?   @relation(fields: [siteId], references: [id], onDelete: Cascade)
   siteId String?
   User   User?   @relation(fields: [userId], references: [id])
   userId String?

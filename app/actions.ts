@@ -94,3 +94,32 @@ export async function DeletePostAction(preState: any, formData: FormData) {
 
   return response;
 }
+
+export async function UpdateImage(formData: FormData) {
+  const user = await requireUser();
+
+  const data = await prisma.site.update({
+    where: {
+      userId: user.id,
+      id: formData.get('siteId') as string,
+    },
+    data: {
+      imageUrl: formData.get('imageUrl') as string,
+    },
+  });
+
+  redirect(`/dashboard/sites`);
+}
+
+export async function DeleteSiteAction(formData: FormData) {
+  const user = await requireUser();
+
+  const response = await prisma.site.delete({
+    where: {
+      userId: user.id,
+      id: formData.get('siteId') as string,
+    },
+  });
+
+  return redirect('/dashboard/sites');
+}
