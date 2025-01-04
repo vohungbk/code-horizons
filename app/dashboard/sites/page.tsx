@@ -63,7 +63,7 @@ async function SiteRoute() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {data.map((site) => (
             <Card key={site.id}>
               <Image
@@ -74,8 +74,10 @@ async function SiteRoute() {
                 height={200}
               />
               <CardHeader>
-                <CardTitle>{site.name}</CardTitle>
-                <CardDescription>{site.description}</CardDescription>
+                <CardTitle className="truncate">{site.name}</CardTitle>
+                <CardDescription className="line-clamp-3">
+                  {site.description}
+                </CardDescription>
               </CardHeader>
 
               <CardFooter>

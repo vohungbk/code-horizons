@@ -63,7 +63,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
           </Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href={'#'}>
+          <Link href={`/dashboard/sites/${params.siteId}/settings`}>
             <Settings className="mr-2 size-4" />
             Settings
           </Link>
