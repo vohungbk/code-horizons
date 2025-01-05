@@ -47,7 +47,7 @@ async function SiteRoute() {
       </div>
       {data === undefined || data.length === 0 ? (
         <EmptyState
-          description=" You currently don't have any sites created. Click the button above to create your first site."
+          description="You currently don't have any sites created. Click the button above to create your first site."
           title="You don't have any Sites created"
           buttonText="Create Site"
           href="/dashboard/sites/create"
