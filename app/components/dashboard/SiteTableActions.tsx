@@ -51,8 +51,7 @@ function SiteTableActions({ siteId, articleId }: SiteTableActionsProps) {
           </DropdownMenuItem>
           <DropdownMenuItem role="button">
             <Button
-              size="icon"
-              className="ml-2 !bg-transparent"
+              className="!bg-transparent pl-0"
               onClick={() => setIsOpened(true)}
               type="button"
             >

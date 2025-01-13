@@ -35,6 +35,11 @@ async function getData(userId: string, siteId: string) {
       title: true,
       createdAt: true,
       id: true,
+      Site: {
+        select: {
+          subdirectory: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -58,7 +63,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
     <>
       <div className="flex items-center justify-end gap-x-4">
         <Button asChild variant="secondary">
-          <Link href={'#'}>
+          <Link href={`/blog/${data[0]?.Site?.subdirectory}`}>
             <Book className="mr-2 size-4" />
             View Blog
           </Link>
