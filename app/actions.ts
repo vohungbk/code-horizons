@@ -5,37 +5,64 @@ import { redirect } from 'next/navigation';
 import prisma from './utils/db';
 import { requireUser } from './utils/requireUser';
 import { postSchema, SiteCreationSchema } from './utils/schema';
+import { stripe } from './utils/stripe';
 
 export async function CreateSiteAction(preState: any, formData: FormData) {
   const user = await requireUser();
 
-  const submission = await parseWithZod(formData, {
-    schema: SiteCreationSchema({
-      async isSubdirectory() {
-        const isSubdirectoryUnique = await prisma.site.findUnique({
-          where: {
-            subdirectory: formData.get('subdirectory') as string,
-          },
-        });
-        return !isSubdirectoryUnique;
+  const [subStatus, sites] = await Promise.all([
+    prisma.subscription.findUnique({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        status: true,
       },
     }),
-    async: true,
-  });
+    prisma.site.findMany({
+      where: {
+        userId: user.id,
+      },
+    }),
+  ]);
 
-  if (submission.status !== 'success') {
-    return submission.reply();
+  if (!subStatus || subStatus.status !== 'active') {
+    if (sites.length < 1) {
+      await createSite();
+    } else {
+      redirect('/dashboard/pricing');
+    }
+  } else if (subStatus.status === 'active') {
+    await createSite();
   }
+  async function createSite() {
+    const submission = await parseWithZod(formData, {
+      schema: SiteCreationSchema({
+        async isSubdirectory() {
+          const isSubdirectoryUnique = await prisma.site.findUnique({
+            where: {
+              subdirectory: formData.get('subdirectory') as string,
+            },
+          });
+          return !isSubdirectoryUnique;
+        },
+      }),
+      async: true,
+    });
 
-  const response = await prisma.site.create({
-    data: {
-      description: submission.value.description,
-      name: submission.value.name,
-      subdirectory: submission.value.subdirectory,
-      userId: user.id,
-    },
-  });
+    if (submission.status !== 'success') {
+      return submission.reply();
+    }
 
+    const response = await prisma.site.create({
+      data: {
+        description: submission.value.description,
+        name: submission.value.name,
+        subdirectory: submission.value.subdirectory,
+        userId: user.id,
+      },
+    });
+  }
   return redirect('/dashboard/sites');
 }
 
@@ -132,4 +159,56 @@ export async function DeleteSiteAction(formData: FormData) {
   });
 
   return redirect('/dashboard/sites');
+}
+
+export async function CreateSubscription() {
+  const user = await requireUser();
+
+  let stripeUserId = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+    select: {
+      email: true,
+      customerId: true,
+      firstName: true,
+    },
+  });
+
+  if (!stripeUserId?.customerId) {
+    const stripeCustomer = await stripe.customers.create({
+      email: stripeUserId?.email,
+      name: stripeUserId?.firstName,
+    });
+
+    stripeUserId = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        customerId: stripeCustomer.id,
+      },
+    });
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    customer: stripeUserId.customerId as string,
+    mode: 'subscription',
+    billing_address_collection: 'auto',
+    payment_method_types: ['card'],
+    customer_update: {
+      address: 'auto',
+      name: 'auto',
+    },
+    success_url: 'http://localhost:3000/dashboard/payment/success',
+    cancel_url: 'http://localhost:3000/dashboard/payment/cancelled',
+    line_items: [
+      {
+        price: process.env.STRIPE_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+  });
+
+  return redirect(session.url!);
 }
