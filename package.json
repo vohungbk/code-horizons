@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}"
+    "prettier": "prettier --write */**/*.{js,jsx,json,ts,tsx,scss,css,md}",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@conform-to/react": "1.2.2",
