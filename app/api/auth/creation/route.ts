@@ -26,5 +26,9 @@ export async function GET() {
     });
   }
 
-  return NextResponse.redirect('http://localhost:3000/dashboard');
+  return NextResponse.redirect(
+    process.env.NODE_ENV === 'production'
+      ? 'https://code-horizons.vercel.app/dashboard'
+      : 'http://localhost:3000/dashboard',
+  );
 }

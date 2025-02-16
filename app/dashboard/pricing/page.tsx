@@ -38,7 +38,9 @@ export default async function PricingPage() {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: data?.User.customerId as string,
-      return_url: 'http://localhost:3000/dashboard',
+      return_url: process.env.NODE_ENV
+        ? 'https://code-horizons.vercel.app/dashboard'
+        : 'http://localhost:3000/dashboard',
     });
 
     return redirect(session.url!);
