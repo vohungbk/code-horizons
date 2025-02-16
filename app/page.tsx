@@ -1,32 +1,24 @@
-import { Button } from '@/components/ui/button';
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from '@kinde-oss/kinde-auth-nextjs/components';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import Hero from './components/frontend/Hero';
+import Logos from './components/frontend/Logos';
+import Features from './components/frontend/Features';
+import { PricingTable } from './components/shared/Pricing';
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
   const { getUser } = getKindeServerSession();
   const session = await getUser();
 
+  if (session?.id) {
+    return redirect('/dashboard');
+  }
+
   return (
-    <div className="p-10">
-      <h4>Hello</h4>
-      {session ? (
-        <LogoutLink>
-          <Button>Logout</Button>
-        </LogoutLink>
-      ) : (
-        <>
-          <RegisterLink>
-            <Button>Register</Button>
-          </RegisterLink>
-          <LoginLink>
-            <Button>Login</Button>
-          </LoginLink>
-        </>
-      )}
+    <div className="mx-auto mb-24 max-w-7xl sm:px-6 lg:px-8">
+      <Hero />
+      <Logos />
+      <Features />
+      <PricingTable />
     </div>
   );
 }
