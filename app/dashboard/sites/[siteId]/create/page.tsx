@@ -25,8 +25,15 @@ import { useActionState, useState } from 'react';
 import { toast } from 'sonner';
 import slugify from 'react-slugify';
 import { SubmitButton } from '@/app/components/dashboard/SubmitButton';
+import { useParams } from 'next/navigation';
 
-export default function CreateArticleRoute({ params }: { params: { siteId: string } }) {
+export default function CreateArticleRoute({
+  params,
+}: {
+  params: Promise<{ siteId: string }>;
+}) {
+  const { siteId } = useParams();
+
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
   const [title, setTitle] = useState<string | undefined>(undefined);
@@ -59,7 +66,7 @@ export default function CreateArticleRoute({ params }: { params: { siteId: strin
     <>
       <div className="flex items-center">
         <Button size="icon" variant="outline" className="mr-3">
-          <Link href={`/dashboard/sites/${params?.siteId}`}>
+          <Link href={`/dashboard/sites/${siteId}`}>
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
@@ -80,7 +87,7 @@ export default function CreateArticleRoute({ params }: { params: { siteId: strin
             onSubmit={form.onSubmit}
             className="flex flex-col gap-6"
           >
-            <Input type="hidden" name="siteId" value={params.siteId} />
+            <Input type="hidden" name="siteId" value={siteId} />
             <div className="grid gap-2">
               <Label>Title</Label>
               <Input

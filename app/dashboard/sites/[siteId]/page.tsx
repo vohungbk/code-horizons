@@ -19,7 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
+import { Book, PlusCircle, Settings } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -49,7 +49,12 @@ async function getData(userId: string, siteId: string) {
   return data;
 }
 
-export default async function SiteIdRoute({ params }: { params: { siteId: string } }) {
+export default async function SiteIdRoute({
+  params,
+}: {
+  params: Promise<{ siteId: string }>;
+}) {
+  const { siteId } = await params;
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -57,7 +62,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
     return redirect('/api/auth/login');
   }
 
-  const data = await getData(user.id, params.siteId);
+  const data = await getData(user.id, siteId);
 
   return (
     <>
@@ -69,13 +74,13 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
           </Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href={`/dashboard/sites/${params.siteId}/settings`}>
+          <Link href={`/dashboard/sites/${siteId}/settings`}>
             <Settings className="mr-2 size-4" />
             Settings
           </Link>
         </Button>
         <Button asChild>
-          <Link href={`/dashboard/sites/${params.siteId}/create`}>
+          <Link href={`/dashboard/sites/${siteId}/create`}>
             <PlusCircle className="mr-2 size-4" />
             Create Article
           </Link>
@@ -86,7 +91,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
           description="You currently don't have any article created. Click the button above to create your first site."
           title=" You don't have any Articles created"
           buttonText="Create Article"
-          href={`/dashboard/sites/${params.siteId}/create`}
+          href={`/dashboard/sites/${siteId}/create`}
         />
       ) : (
         <Card>
@@ -129,7 +134,7 @@ export default async function SiteIdRoute({ params }: { params: { siteId: string
                       )}
                     </TableCell>
                     <TableCell className="text-end">
-                      <SiteTableActions siteId={params?.siteId} articleId={item.id} />
+                      <SiteTableActions siteId={siteId} articleId={item.id} />
                     </TableCell>
                   </TableRow>
                 ))}

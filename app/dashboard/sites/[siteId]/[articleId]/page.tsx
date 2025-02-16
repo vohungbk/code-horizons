@@ -27,24 +27,25 @@ const getData = async (id: string) => {
 export default async function EditArticleRoute({
   params,
 }: {
-  params: {
+  params: Promise<{
     siteId: string;
     articleId: string;
-  };
+  }>;
 }) {
-  const data = await getData(params.articleId);
+  const { articleId, siteId } = await params;
+  const data = await getData(articleId);
 
   return (
     <>
       <div className="flex items-center">
         <Button size="icon" variant="outline" className="mr-2">
-          <Link href={`/dashboard/sites/${params.siteId}`}>
+          <Link href={`/dashboard/sites/${siteId}`}>
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
         <h1>Edit Article</h1>
       </div>
-      <EditArticleForm data={data} siteId={params.siteId} />
+      <EditArticleForm data={data} siteId={siteId} />
     </>
   );
 }

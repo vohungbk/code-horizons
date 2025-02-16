@@ -3,11 +3,7 @@ import React from 'react';
 import Logo from '@/public/logo.png';
 import Image from 'next/image';
 import { ThemeToggle } from '../dashboard/ThemeToggle';
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from '@kinde-oss/kinde-auth-nextjs/components';
+import { RegisterLink, LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { Button } from '@/components/ui/button';
 import HeroImage from '@/public/hero.png';
 

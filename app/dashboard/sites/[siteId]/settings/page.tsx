@@ -9,21 +9,26 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Car, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
-export default function SettingsPage({ params }: { params: { siteId: string } }) {
+export default async function SettingsPage({
+  params,
+}: {
+  params: Promise<{ siteId: string }>;
+}) {
+  const { siteId } = await params;
   return (
     <>
       <div className="flex items-center gap-x-2">
         <Button size={'icon'} variant="outline">
-          <Link href={`/dashboard/sites/${params.siteId}`}>
+          <Link href={`/dashboard/sites/${siteId}`}>
             <ChevronLeft className="size-4" />
           </Link>
         </Button>
         <h3 className="text-xl font-semibold">Go back</h3>
       </div>
-      <UploadImageForm siteId={params.siteId} />
+      <UploadImageForm siteId={siteId} />
       <Card>
         <CardHeader>
           <CardTitle className="text-red-500">Danger</CardTitle>
@@ -34,7 +39,7 @@ export default function SettingsPage({ params }: { params: { siteId: string } })
         </CardHeader>
         <CardFooter>
           <form action={DeleteSiteAction}>
-            <input type="hidden" name="siteId" value={params.siteId} />
+            <input type="hidden" name="siteId" value={siteId} />
             <SubmitButton variant="destructive" text="Delete Everything" />
           </form>
         </CardFooter>
